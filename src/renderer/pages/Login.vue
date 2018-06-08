@@ -51,6 +51,7 @@ export default {
     login(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(this.loginForm);
           this.$api.$users.login(this.loginForm, (data) => {
             this.updateProfile(data);
             this.$router.push('/');

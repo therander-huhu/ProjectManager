@@ -36,5 +36,6 @@ module.exports = {
     'no-unused-expressions': 0,
     'spaced-comment': 0,
     'no-underscore-dangle': 0,
+    "linebreak-style": [0 ,"error", "windows"]
   }
 }

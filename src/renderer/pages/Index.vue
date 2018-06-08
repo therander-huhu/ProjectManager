@@ -30,6 +30,10 @@
           <i class="el-icon-my-evaluation"></i>
           <span slot="title">月度评价</span>
         </el-menu-item>
+        <el-menu-item index="/busyIdle" class="nav__item" title="忙闲查询" v-if="profile.isAdmin">
+          <i class="el-icon-search"></i>
+          <span slot="title">忙闲查询</span>
+        </el-menu-item>
       </el-menu>
     </div>
     <div id="right">

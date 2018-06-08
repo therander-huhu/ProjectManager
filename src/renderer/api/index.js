@@ -168,6 +168,7 @@ const usersApi = {
     post('users/register', successCb, data);
   },
   login(data, successCb) {
+    console.log(data);
     post('users/login', successCb, data);
   },
   autoLogin(successCb) {
@@ -394,6 +395,16 @@ const evaluation = {
   },
 };
 
+const busyIdle = {
+  getBusyIdle(data, successCb) {
+    if (data.type === 3) {
+      get(`/busyIdle?startTime=${data.startTime}&endTime=${data.endTime}&hours=${data.hours}&type=${data.type}&id=${data.id}`, successCb);
+    } else {
+      get(`/busyIdle?startTime=${data.startTime}&endTime=${data.endTime}&hours=${data.hours}&type=${data.type}`, successCb);
+    }
+  },
+};
+
 export default {
   $users: usersApi,
   $projects: projectsApi,
@@ -404,6 +415,7 @@ export default {
   $options: optionsApi,
   $daily: dailyApi,
   $evaluation: evaluation,
+  $busyIdle: busyIdle,
 };
 
 export {
