@@ -72,8 +72,8 @@ export default {
     findBusyIdle() {
       let that = this;
       let params = {
-        startTime: this.historyStartEnd[0],
-        endTime: this.historyStartEnd[1],
+        startTime: date.format(new Date(this.historyStartEnd[0]), 'yyyy-MM-dd'),
+        endTime: date.format(new Date(this.historyStartEnd[1]), 'yyyy-MM-dd'),
         hours: this.busyIdleHours,
         type: 2,
       };
@@ -83,9 +83,9 @@ export default {
     },
     init() {
       let lastWeek = new Date();
-      lastWeek.setDate(lastWeek.getDate() - 7);
-      this.historyStartEnd[0] = date.format(date.getWeekStart(lastWeek), 'yyyy-MM-dd');
-      this.historyStartEnd[1] = date.format(date.getWeekEnd(lastWeek), 'yyyy-MM-dd');
+      // lastWeek.setDate(lastWeek.getDate() - 7);
+      this.historyStartEnd[0] = date.getWeekStart(lastWeek);
+      this.historyStartEnd[1] = date.getWeekEnd(lastWeek);
     },
     valiDate(data) {
       let startTime = data[0];
@@ -113,7 +113,6 @@ export default {
       });
     },
     filterTag(value, row) {
-      console.log('row', row);
       if (value === '1') {
         return row.busyTime > 0;
       }
