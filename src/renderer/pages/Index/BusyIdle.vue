@@ -11,9 +11,10 @@
       </div>
     </el-popover>
     <div class="btns">
+      <h5 class="timeTitle" v-html="timeTitle[0]+'至'+timeTitle[1]"></h5>
       <el-button id="find-busyIdle" class="btn" icon="el-icon-my-history" plain v-popover:findBusyIdle>选择日期</el-button>
     </div>
-    <button v-show="showFlag" @click="showFlag = false" type="button" class="el-carousel__arrow el-carousel__arrow--left busyIdle__back"><i class="el-icon-arrow-left"></i></button>
+    <button v-show="showFlag" @click="backList" type="button" class="el-carousel__arrow el-carousel__arrow--left busyIdle__back"><i class="el-icon-arrow-left"></i></button>
     <div v-if="dataList.length == 0" id="no-evaluation-tips">
         暂无数据
     </div>
@@ -66,6 +67,8 @@ export default {
       busyIdleHours: 0,
       personList: [],
       showFlag: false,
+      timeTitle: [],
+      jobId: 0,
     };
   },
   methods: {
@@ -75,17 +78,36 @@ export default {
         startTime: date.format(new Date(this.historyStartEnd[0]), 'yyyy-MM-dd'),
         endTime: date.format(new Date(this.historyStartEnd[1]), 'yyyy-MM-dd'),
         hours: this.busyIdleHours,
-        type: 2,
       };
+      if (that.jobId === 0) {
+        params.type = 2;
+      } else {
+        params.type = 3;
+        params.id = this.jobId;
+      }
       this.$api.$busyIdle.getBusyIdle(params, (res) => {
-        that.dataList = res.retdata;
+        if (that.jobId === 0) {
+          that.dataList = res.retdata;
+        } else {
+          that.personList = res.retdata;
+          that.showFlag = true;
+        }
+        that.timeTitle[0] = date.format(new Date(this.historyStartEnd[0]), 'yyyy-MM-dd');
+        that.timeTitle[1] = date.format(new Date(this.historyStartEnd[1]), 'yyyy-MM-dd');
       });
+    },
+    backList() {
+      this.showFlag = false;
+      this.jobId = 0;
+      this.findBusyIdle();
     },
     init() {
       let lastWeek = new Date();
       // lastWeek.setDate(lastWeek.getDate() - 7);
       this.historyStartEnd[0] = date.getWeekStart(lastWeek);
       this.historyStartEnd[1] = date.getWeekEnd(lastWeek);
+      this.timeTitle[0] = date.format(new Date(this.historyStartEnd[0]), 'yyyy-MM-dd');
+      this.timeTitle[1] = date.format(new Date(this.historyStartEnd[1]), 'yyyy-MM-dd');
     },
     valiDate(data) {
       let startTime = data[0];
@@ -94,23 +116,13 @@ export default {
         this.$message.error({ message: '请选择日期', center: true });
         return false;
       }
-      startTime = date.format(new Date(startTime), 'yyyy-MM-dd');
-      endTime = date.format(new Date(endTime), 'yyyy-MM-dd');
+      startTime = new Date(startTime);
+      endTime = new Date(endTime);
       return { startTime, endTime };
     },
     rowClick(row, event, column) {
-      let that = this;
-      let params = {
-        startTime: this.historyStartEnd[0],
-        endTime: this.historyStartEnd[1],
-        hours: this.busyIdleHours,
-        type: 3,
-        id: row.id,
-      };
-      this.$api.$busyIdle.getBusyIdle(params, (res) => {
-        that.showFlag = true;
-        that.personList = res.retdata;
-      });
+      this.jobId = row.id;
+      this.findBusyIdle();
     },
     filterTag(value, row) {
       if (value === '1') {
@@ -177,5 +189,13 @@ export default {
   transform: translateY(-50%);
   text-align: center;
   font-size: 0.878vw;
+}
+.timeTitle{
+  float: left;
+  color: #606266;
+  font-weight: 400;
+  margin: 0;
+  margin-left: 4vw;
+  padding: 0;
 }
 </style>
