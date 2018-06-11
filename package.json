@@ -1,6 +1,6 @@
 {
   "name": "DLManager",
-  "version": "0.6.0",
+  "version": "0.6.3",
   "author": "Yanjiaxin <shiroyan@qq.com>",
   "description": "DLManager",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "Shiroyan",
+        "owner": "therander-huhu",
         "repo": "ProjectManager"
       }
     ],
