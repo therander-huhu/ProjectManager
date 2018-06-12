@@ -1,6 +1,18 @@
 <template>
   <div style="height: 100%">
     <div id="daily__wrapper">
+    <el-dialog :visible.sync="isGenReport" center width="27.818vw" custom-class="gen-report__dialog">
+      <div id="content">
+        <div class="form__item">
+          <div class="form__label">时间</div>
+          <date-time-picker v-model="reportStartEnd"></date-time-picker>
+        </div>
+        <p style="font-size:12px;color:#9e9e9e;margin:0;">* 起止日期必须在同一个月内哦~</p>
+      </div>
+      <div slot="footer">
+        <el-button id="gen-report__ensure" plain @click="genReport">确认</el-button>
+      </div>
+    </el-dialog>
       <div id="user-list__wrapper">
         <user-list :curDepId="curDepId" :curUser="curUser" @depChange="depChange" @userChange="userChange"></user-list>
       </div>
@@ -9,7 +21,9 @@
         </el-date-picker>
         <div id="add-daily__wrapper">
           <el-button @click="showAddDaily" icon="el-icon-edit-outline" type="primary" id="add-daily" v-if="isMenuVisible" size="small">撰写日报</el-button>
+          <el-button @click="isGenReport = true" icon="el-icon-edit-outline" type="primary" id="daily-excel" size="small">日报导出</el-button>
         </div>
+        
         <transition name="el-zoom-in-top">
           <div id="add-daily__form" v-show="isAddDaily">
             <div class="timeline__point"></div>
@@ -46,6 +60,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { date } from '@/utils';
+import DateTimePicker from '@/components/DateTimePicker';
 import UserList from '@/components/UserList';
 import DailyItem from './Daily/DailyItem';
 
@@ -58,6 +73,7 @@ export default {
   components: {
     'user-list': UserList,
     'daily-item': DailyItem,
+    'date-time-picker': DateTimePicker,
   },
   data() {
     return {
@@ -80,6 +96,8 @@ export default {
           return time > LAST_DATE;
         },
       },
+      isGenReport: false,
+      reportStartEnd: [],
     };
   },
   computed: {
@@ -176,6 +194,16 @@ export default {
           () => this.getDailies(this.curUser, this.dailyMonth));
       }).catch(() => { });
     },
+    genReport() {
+      let that = this;
+      let params = {
+        startDate: date.format(new Date(that.reportStartEnd[0]), 'yyyy-MM-dd'),
+        endDate: date.format(new Date(that.reportStartEnd[1]), 'yyyy-MM-dd'),
+      };
+      this.$api.$daily.excel(params, (res) => {
+        that.isGenReport = false;
+      });
+    },
   },
   created() {
     if (this.profile.username === '') {
@@ -244,7 +272,7 @@ export default {
   margin-bottom: 40px;
 }
 #add-daily {
-  margin-right: 250px;
+  margin-right: 10px;
   background-color: $default;
   border: none;
   &:hover,
@@ -252,7 +280,15 @@ export default {
     opacity: 0.9;
   }
 }
-
+#daily-excel {
+  margin-right: 200px;
+  background-color: $default;
+  border: none;
+  &:hover,
+  &:focus {
+    opacity: 0.9;
+  }
+}
 #add-daily__form {
   width: 50%;
   min-height: 26vh;

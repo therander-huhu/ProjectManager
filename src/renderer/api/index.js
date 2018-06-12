@@ -370,6 +370,16 @@ const dailyApi = {
       date: dailyDate,
     });
   },
+  excel(data, successCb) {
+    let callback = (data) => {
+      let a = document.createElement('a');
+      a.href = data.url;
+      a.download = '';
+      a.click();
+      successCb && successCb();
+    };
+    get(`/dailies/dailyexcel/url?startDate=${data.startDate}&endDate=${data.endDate}`, callback);
+  },
 };
 //#endregion
 
