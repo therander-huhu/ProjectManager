@@ -29,7 +29,10 @@
           <el-button class="submit" @click="updateDaily" type="primary" size="small">修改</el-button>
         </div>
       </div>
-      <div class="daily-item" v-html="daily.content" v-else>
+      <div class="daily-item" v-else>
+        <h2>{{daily.dailyTitle}}</h2>
+        <el-tag class="m-5" v-for="item in daily.events" :key="item.id" v-if="item.dailyRealTime">{{item.projectName +' '+ item.dailyRealTime+'h'}}</el-tag>
+        <p v-for="item in daily.content" :key="item.content">{{item}}</p>
       </div>
     </transition>
   </div>
@@ -58,8 +61,10 @@ export default {
       default() {
         return {
           id: -1,
-          content: '',
+          content: [],
+          dailyTitle: '',
           date: new Date(),
+          events: [],
         };
       },
     },
@@ -260,6 +265,12 @@ export default {
   p {
     color: $tips;
     font-size: 14px;
+  }
+  .el-tag {
+    margin: 5px;
+    color: #3f51b5;
+    border: 1px solid rgba(63,81,191,0.2);
+    background-color: rgba(63,81,191,0.1);
   }
 }
 .daily-item--edit {
