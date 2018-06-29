@@ -304,7 +304,7 @@ const staApi = {
       get(`statistics/${userId}/real?startTime=${startTime}&endTime=${endTime}`, successCb) :
       get(`statistics/${userId}/real`, successCb);
   },
-  month(date, successCb) {
+  month(params, successCb) {
     let callback = (data) => {
       let a = document.createElement('a');
       a.href = data.url;
@@ -312,7 +312,7 @@ const staApi = {
       a.click();
       successCb && successCb();
     };
-    get(`/statistics/excel/monthreport/url?date=${date}`, callback);
+    get(`/statistics/excel/monthreport/url?date=${params.month}&type=${params.type}`, callback);
   },
 };
 //#endregion

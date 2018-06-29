@@ -11,20 +11,20 @@
       </div>
     </el-popover>
     <div class="btns">
-      <h5 class="timeTitle" v-html="timeTitle[0]+'至'+timeTitle[1]"></h5>
+      <h3 class="timeTitle" v-html="timeTitle[0]+'至'+timeTitle[1]"></h3>
       <el-button id="find-busyIdle" class="btn" icon="el-icon-my-history" plain v-popover:findBusyIdle>选择日期</el-button>
     </div>
     <button v-show="showFlag" @click="backList" type="button" class="el-carousel__arrow el-carousel__arrow--left busyIdle__back"><i class="el-icon-arrow-left"></i></button>
     <div v-if="dataList.length == 0" id="no-evaluation-tips">
         暂无数据
     </div>
-    <el-table v-show="!showFlag" :data="dataList" stripe style="width: 90%;margin:20px auto;" @row-click="rowClick">
+    <el-table v-show="!showFlag" :data="dataList" stripe style="width: 90%;margin:20px auto;max-height: 85%;overflow:scroll;" @row-click="rowClick">
       <el-table-column prop="name" label="职位"></el-table-column>
-      <el-table-column prop="avaTime" label="可用工时"></el-table-column>
-      <el-table-column prop="planTime" label="计划工时"></el-table-column>
-      <el-table-column prop="realTime" label="实际工时"></el-table-column>
-      <el-table-column prop="approval" label="核准工时"></el-table-column>
-      <el-table-column prop="busyTime" label="忙闲工时"></el-table-column>
+      <el-table-column prop="avaTime" sortable label="可用工时"></el-table-column>
+      <el-table-column prop="planTime" sortable label="计划工时"></el-table-column>
+      <el-table-column prop="realTime" sortable label="实际工时"></el-table-column>
+      <el-table-column prop="approval" sortable label="核准工时"></el-table-column>
+      <el-table-column prop="busyTime" sortable label="忙闲工时"></el-table-column>
     </el-table>
     <el-table v-show="showFlag" :data="personList" stripe style="width: 90%;margin:20px auto;">
       <el-table-column prop="name" label="姓名"></el-table-column>
@@ -152,9 +152,12 @@ export default {
     }
   }
   .btn {
-    @include setSize(110px, 32px);
+    @include setSize(110px, 52px);
     padding: 6px;
     font-size: 13px;
+    span {
+      vertical-align: super;
+    }
   }
 }
 #no-evaluation-tips {

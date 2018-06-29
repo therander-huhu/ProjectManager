@@ -65,7 +65,6 @@
           </div>
         </div>
         <div id="plans__container">
-          <plan v-for="p in curPlans" :key="p.id" :userList="userList" :plan="p" :isLeader="isLeader" @updatePlan="updatePlan" @deletePlan="deletePlan" @createEvent="createEvent" @updateEvent="updateEvent" @deleteEvent="deleteEvent" @finishEvent="finishEvent"></plan>
           <transition-group mode="out-in" name="el-fade-in">
             <el-button id="add-plan-btn" icon="el-icon-plus" plain v-if="isLeader && !isAddPlan" @click="isAddPlan=true" key="button">新增计划</el-button>
             <div id="add-plan__form" v-if="isAddPlan" key="form">
@@ -76,6 +75,7 @@
               </div>
             </div>
           </transition-group>
+          <plan v-for="p in curPlans" :key="p.id" :userList="userList" :plan="p" :isLeader="isLeader" @updatePlan="updatePlan" @deletePlan="deletePlan" @createEvent="createEvent" @updateEvent="updateEvent" @deleteEvent="deleteEvent" @finishEvent="finishEvent"></plan>
         </div>
         <p class="handle-tips">* 按下Shift + 滑轮 进行左右滑动</p>
       </el-tab-pane>

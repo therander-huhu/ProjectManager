@@ -110,8 +110,8 @@ export default {
     genReport(startTime, endTime, type, cb) {
       this.$api.$sta.excel(type, startTime, endTime, cb);
     },
-    genMonthReport(date, cb) {
-      this.$api.$sta.month(date, cb);
+    genMonthReport(month, type, cb) {
+      this.$api.$sta.month({ month, type }, cb);
     },
     getPlan(userId, startTime, endTime) {
       userId = userId === -1 ? this.profile.userId : userId;

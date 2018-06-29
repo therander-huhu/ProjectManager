@@ -33,6 +33,12 @@
       <div style="text-align: center">
         <el-date-picker id="month-report__picker" v-model="month" :picker-options="onlyBeforeThisMonth" type="month" align="center" placeholder="选择月份" format="yyyy 年 MM 月"></el-date-picker>
       </div>
+      <div style="text-align: center;">
+        <el-radio-group v-model="monthReportType" style="display: block;">
+          <el-radio label="real">实际</el-radio>
+          <el-radio label="approval">核准</el-radio>
+        </el-radio-group>
+      </div>
       <div slot="footer">
         <el-button id="gen-report__ensure" plain @click="genMonthReport">确认</el-button>
       </div>
@@ -106,11 +112,13 @@ export default {
         date.format(date.getWeekEnd(), 'yyyy-MM-dd hh:mm:ss'),
       ],
       reportType: 'plan',
+      monthReportType: 'real',
       onlyBeforeThisMonth: {
         disabledDate(time) {
           return time > LAST_DATE;
         },
       },
+      excelType: 'week',
     };
   },
   methods: {
@@ -143,7 +151,7 @@ export default {
     },
     genMonthReport() {
       let month = date.format(this.month, 'yyyy-MM');
-      this.$emit('genMonthReport', month, () => {
+      this.$emit('genMonthReport', month, this.monthReportType, () => {
         this.isGenMonthReport = false;
       });
     },
