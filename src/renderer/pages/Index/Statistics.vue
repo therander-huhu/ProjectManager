@@ -139,6 +139,13 @@ export default {
     },
   },
   created() {
+    this.$router.afterEach((to, from, next) => {
+      if (from.path === '/busyIdle' && to.path === '/statistics') {
+        this.startTime = this.$route.query.startTime;
+        this.endTime = this.$route.query.endTime;
+        this.userChange(this.$route.query.userId);
+      }
+    });
     if (this.profile.username === '') {
       this.$api.$users.getProfile((data) => {
         this.updateProfile(data);

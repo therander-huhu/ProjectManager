@@ -23,8 +23,8 @@
       <div class="plan__progress" :style="progress"></div>
     </div>
     <div class="events__container">
-      <event v-for="e in plan.events" :key="e.id" :event="e" :isLeader="isLeader" @updateEvent="updateEvent(e)" @deleteEvent="deleteEvent(e.id)" @finishEvent="finishEvent"></event>
       <el-button id="add-event" icon="el-icon-circle-plus" type="text" v-if="isLeader" @click="isAddEvent = true">添加新事件</el-button>
+      <event v-for="e in plan.events" :key="e.id" :event="e" :isLeader="isLeader" @updateEvent="updateEvent(e)" @deleteEvent="deleteEvent(e.id)" @finishEvent="finishEvent"></event>
     </div>
     <div class="del__dialog" v-show="isDelPlan">
       <div class="dialog__content">

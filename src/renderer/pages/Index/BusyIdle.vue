@@ -5,7 +5,7 @@
         <p>起止时间</p>
         <date-time-picker v-model="historyStartEnd"></date-time-picker>
         <div style="text-align: center">
-          <el-button id="find__cancel" @click="isFindHistory = false" type="text">取消</el-button>
+          <el-button id="find__cancel" @click="isFindBusyIdle = false" type="text">取消</el-button>
           <el-button id="find__ensure" @click="findBusyIdle" type="text">确定</el-button>
         </div>
       </div>
@@ -18,7 +18,7 @@
     <div v-if="dataList.length == 0" id="no-evaluation-tips">
         暂无数据
     </div>
-    <el-table v-show="!showFlag" :data="dataList" stripe style="width: 90%;margin:20px auto;max-height: 85%;overflow:scroll;" @row-click="rowClick">
+    <el-table v-show="!showFlag" :data="dataList" stripe class="table-style" @row-click="rowClick">
       <el-table-column prop="name" label="职位"></el-table-column>
       <el-table-column prop="avaTime" sortable label="可用工时"></el-table-column>
       <el-table-column prop="planTime" sortable label="计划工时"></el-table-column>
@@ -26,7 +26,11 @@
       <el-table-column prop="approval" sortable label="核准工时"></el-table-column>
       <el-table-column prop="busyTime" sortable label="忙闲工时"></el-table-column>
     </el-table>
-    <el-table v-show="showFlag" :data="personList" stripe style="width: 90%;margin:20px auto;">
+    <div v-show="showFlag" style="margin-left: 4vw">
+      <el-radio v-model="radio" border label="1">忙碌人员</el-radio>
+      <el-radio v-model="radio" border label="2">闲置人员</el-radio>
+    </div>
+    <el-table v-show="showFlag" ref="table" :data="personList" stripe class="table-style" @row-click="toStatistics">
       <el-table-column prop="name" label="姓名"></el-table-column>
       <el-table-column prop="cityName" label="城市"></el-table-column>
       <el-table-column prop="jobName" label="岗位"></el-table-column>
@@ -34,11 +38,7 @@
       <el-table-column prop="planTime" sortable label="计划工时"></el-table-column>
       <el-table-column prop="realTime" sortable label="实际工时"></el-table-column>
       <el-table-column prop="approval" sortable label="核准工时"></el-table-column>
-      <el-table-column prop="busyTime" sortable label="忙闲工时" 
-        :filters="[{ text: '闲置人员', value: '1' }, { text: '忙碌人员', value: '0' }]"
-        :filter-method="filterTag"
-        filter-placement="bottom-end">
-      </el-table-column>
+      <el-table-column prop="busyTime" sortable label="忙闲工时"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -69,9 +69,39 @@ export default {
       showFlag: false,
       timeTitle: [],
       jobId: 0,
+      radio: '0',
+      personListCopy: [],
     };
   },
+  watch: {
+    radio(val, oldVal) {
+      this.personList = [];
+      if (val === '1') {
+        this.personListCopy.forEach((item, index) => {
+          if (item.busyTime > 0) {
+            this.personList.push(item);
+          }
+        });
+      } else if (val === '2') {
+        this.personListCopy.forEach((item, index) => {
+          if (item.busyTime <= 0) {
+            this.personList.push(item);
+          }
+        });
+      }
+    },
+  },
   methods: {
+    toStatistics(row, event, column) {
+      this.$router.push({
+        path: '/statistics',
+        query: {
+          startTime: this.historyStartEnd[0],
+          endTime: this.historyStartEnd[1],
+          userId: row.userId,
+        },
+      });
+    },
     findBusyIdle() {
       let that = this;
       let params = {
@@ -90,14 +120,17 @@ export default {
           that.dataList = res.retdata;
         } else {
           that.personList = res.retdata;
+          that.personListCopy = res.retdata;
           that.showFlag = true;
         }
         that.timeTitle[0] = date.format(new Date(this.historyStartEnd[0]), 'yyyy-MM-dd');
         that.timeTitle[1] = date.format(new Date(this.historyStartEnd[1]), 'yyyy-MM-dd');
       });
+      that.isFindBusyIdle = false;
     },
     backList() {
       this.showFlag = false;
+      this.radio = '3';
       this.jobId = 0;
       this.findBusyIdle();
     },
@@ -124,12 +157,6 @@ export default {
       this.jobId = row.id;
       this.findBusyIdle();
     },
-    filterTag(value, row) {
-      if (value === '1') {
-        return row.busyTime > 0;
-      }
-      return row.busyTime <= 0;
-    },
   },
   created() {
     this.init();
@@ -139,6 +166,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.table-style {
+  width: 90%;
+  margin:20px auto;
+  max-height: 85%;
+  overflow:scroll;
+}
+.table-style::-webkit-scrollbar {
+  display: none;
+}
 .btns {
   width: 100%;
   overflow: hidden;
@@ -155,9 +191,7 @@ export default {
     @include setSize(110px, 52px);
     padding: 6px;
     font-size: 13px;
-    span {
-      vertical-align: super;
-    }
+    vertical-align: super;
   }
 }
 #no-evaluation-tips {
@@ -169,7 +203,7 @@ export default {
 #dusyIdle__table{
   width: 80%;
   height: 80%;
-  margin: 20px auto;
+  margin: 20px auto 0 auto;
   overflow: scroll;
 }
 
