@@ -30,9 +30,7 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="isGenMonthReport" center width="27.818vw" custom-class="gen-report__dialog">
-      <div style="text-align: center">
-        <el-date-picker id="month-report__picker" v-model="month" :picker-options="onlyBeforeThisMonth" type="month" align="center" placeholder="选择月份" format="yyyy 年 MM 月"></el-date-picker>
-      </div>
+      <el-date-picker style="margin-left: 7vw;" id="month-report__picker" v-model="month" :picker-options="onlyBeforeThisMonth" type="month" align="center" placeholder="选择月份" format="yyyy 年 MM 月"></el-date-picker>
       <div style="text-align: center;">
         <el-radio-group v-model="monthReportType" style="display: block;">
           <el-radio label="real">实际</el-radio>
