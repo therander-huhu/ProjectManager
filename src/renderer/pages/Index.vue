@@ -66,9 +66,7 @@
         <el-button id="logout" icon="el-icon-my-logout" title="注销" @click="logout"></el-button>
       </div>
       <transition mode="out-in" name="el-fade-in" :duration="250">
-        <keep-alive>
-          <router-view id="content__wrapper"></router-view>
-        </keep-alive>
+        <router-view id="content__wrapper"></router-view>
       </transition>
       <transition mode="out-in" name="el-fade-in" :duration="250">
         <keep-alive>
